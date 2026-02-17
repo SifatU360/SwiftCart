@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - SwiftCart</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: "Public Sans", sans-serif;
+            font-optical-sizing: auto;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        @keyframes slide-up {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        .animate-slide-up {
+            animation: slide-up 0.3s ease-out;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        .category-btn.active {
+            background-color: rgb(79 70 229);
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header / Navbar -->
+    <header class="w-full fixed top-0 left-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <nav class="max-w-6xl mx-auto p-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div>
+                <a href="swiftcard.html" class="text-2xl text-indigo-600 font-bold">SwiftCart</a>
+            </div>
+
+            <!-- Nav Items (Desktop & Mobile) -->
+            <div id="nav_container"
+                class="fixed md:static top-0 left-[-100%] w-full md:w-auto h-full md:h-auto flex items-center justify-center bg-white md:bg-transparent transition-all duration-300 z-40">
+                <ul class="flex flex-col md:flex-row items-center gap-8">
+                    <li><a class="nav_links text-gray-600 font-medium hover:text-indigo-600" href="swiftcard.html">Home</a></li>
+                    <li><a class="nav_links text-indigo-600 font-bold" href="products.html">Products</a></li>
+                    <li><a class="nav_links text-gray-600 font-medium hover:text-indigo-600" href="swiftcard.html#about">About</a></li>
+                    <li><a class="nav_links text-gray-600 font-medium hover:text-indigo-600" href="swiftcard.html#contact">Contact</a></li>
+                </ul>
+
+                <!-- Close Button (Mobile) -->
+                <button id="close_btn" class="absolute top-8 right-8 md:hidden text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Cart & Hamburger -->
+            <div class="flex items-center gap-4">
+                <button id="cart-btn" class="relative text-gray-700 text-xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count"
+                        class="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+
+                <!-- Mobile Hamburger -->
+                <button id="hamburger"
+                    class="w-10 h-10 bg-indigo-600 grid place-content-center rounded-full md:hidden cursor-pointer">
+                    <i class="fas fa-bars text-white"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="pt-32 pb-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
+            <p class="text-lg text-indigo-100">Discover amazing products at great prices</p>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="max-w-6xl mx-auto px-6 py-12">
+        <!-- Category Filters -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Filter by Category</h2>
+            <div id="category-buttons" class="flex flex-wrap gap-3">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="hidden">
+            <div class="flex flex-col items-center justify-center py-20">
+                <div class="w-16 h-16 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin mb-4"></div>
+                <p class="text-gray-600 font-medium">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- Product Count -->
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-800">
+                Showing <span id="product-count">0</span> products
+            </h3>
+            <div class="text-sm text-gray-500">
+                Category: <span id="current-category" class="font-medium text-indigo-600">All</span>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Products will be loaded dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-20">
+            <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500 text-lg">No products found</p>
+        </div>
+    </section>
+
+    <!-- Product Details Modal -->
+    <div id="details-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center px-4 z-50">
+        <div class="bg-white max-w-3xl w-full rounded-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+            <button id="close-details"
+                class="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="details-content">
+                <!-- Product details will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center px-4 z-50">
+        <div class="bg-white max-w-lg w-full rounded-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+            <button id="close-cart"
+                class="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-shopping-cart text-indigo-600"></i> Your Cart
+            </h3>
+            <div id="cart-items" class="space-y-4 mb-6">
+                <!-- Cart items will be loaded dynamically -->
+            </div>
+            <div id="empty-cart" class="text-center py-8 text-gray-500 hidden">
+                <i class="fas fa-shopping-cart text-4xl mb-3"></i>
+                <p>Your cart is empty</p>
+                <a href="products.html" class="inline-block mt-4 text-indigo-600 hover:text-indigo-700 font-medium">
+                    Continue Shopping
+                </a>
+            </div>
+            <div id="cart-footer" class="border-t border-gray-200 pt-4 hidden">
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span id="cart-subtotal" class="font-medium">$0.00</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600">Shipping</span>
+                        <span class="font-medium text-green-600">Free</span>
+                    </div>
+                    <div class="flex items-center justify-between text-lg border-t pt-2">
+                        <span class="font-bold">Total</span>
+                        <span id="cart-total" class="font-bold text-xl text-indigo-600">$0.00</span>
+                    </div>
+                </div>
+                <button
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition mb-2">
+                    <i class="fas fa-lock mr-2"></i>Checkout
+                </button>
+                <button id="clear-cart"
+                    class="w-full bg-red-50 text-red-600 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script/products.js"></script>
+</body>
+
+</html>
