@@ -62,7 +62,7 @@ function setupEventListeners() {
 
   // Shop Now button - navigate to products page
   elements.shopNowBtn?.addEventListener('click', () => {
-    window.location.href = 'products.html';
+    window.location.href = 'Products/products.html';
   });
 
   // Cart Modal
